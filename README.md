@@ -87,6 +87,31 @@ brave_api_key: ""       # Brave Search API key — enables web search tool when 
 
 ---
 
+## Model Runtime Tuning
+
+If replies are inconsistent (long stalls, random unloads, or generated tokens not appearing), tune runtime settings before changing prompts.
+
+These setting names are LM Studio/llama.cpp-style and may differ in Ollama or other backends.
+
+General starting points for larger local models:
+
+- `Max Concurrent Predictions`: `1`
+- `Evaluation Batch Size`: `128` to `256` (start at `128` for stability)
+- `Context Length`: `8192` (increase only after stable runs)
+- `KV Cache Offload`: `ON` (if available)
+- `Flash Attention`: `ON` (if supported by your backend/model)
+- `Keep Model in Memory`: `ON`
+- `mmap`: `ON` (if available)
+- `MoE Experts / Layers`: use model defaults first
+
+Troubleshooting:
+
+- Resource/unload errors: lower context length and concurrent predictions.
+- Stutters or very uneven token rate: lower evaluation batch size.
+- Works in backend UI but chat looks inconsistent: update Shinobi and keep backend/model settings per-model instead of global.
+
+---
+
 ## Agents
 
 Agents are markdown files with YAML frontmatter. Drop them in any directory listed under `agent_dirs` in your config.

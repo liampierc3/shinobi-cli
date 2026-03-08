@@ -71,9 +71,11 @@ type chatRequest struct {
 type chatResponse struct {
 	Choices []struct {
 		Message struct {
-			Role      string `json:"role"`
-			Content   string `json:"content"`
-			Reasoning string `json:"reasoning"`
+			Role             string          `json:"role"`
+			Content          json.RawMessage `json:"content"`
+			Reasoning        json.RawMessage `json:"reasoning"`
+			ReasoningContent json.RawMessage `json:"reasoning_content"`
+			Thinking         json.RawMessage `json:"thinking"`
 		} `json:"message"`
 	} `json:"choices"`
 }
@@ -81,10 +83,12 @@ type chatResponse struct {
 type streamChunk struct {
 	Choices []struct {
 		Delta struct {
-			Content   string `json:"content"`
-			Reasoning string `json:"reasoning"`
+			Content          json.RawMessage `json:"content"`
+			Reasoning        json.RawMessage `json:"reasoning"`
+			ReasoningContent json.RawMessage `json:"reasoning_content"`
+			Thinking         json.RawMessage `json:"thinking"`
 		} `json:"delta"`
-		FinishReason string `json:"finish_reason"`
+		FinishReason json.RawMessage `json:"finish_reason"`
 	} `json:"choices"`
 }
 
@@ -166,7 +170,7 @@ func (c *Client) ChatStream(ctx context.Context, req llm.ChatRequest, ch chan<- 
 		if len(chunk.Choices) == 0 {
 			continue
 		}
-		content := chunk.Choices[0].Delta.Content
+		content := decodeChunkText(chunk.Choices[0].Delta.Content)
 		if content != "" {
 			select {
 			case ch <- llm.StreamToken{Content: content, Done: false}:
@@ -175,7 +179,11 @@ func (c *Client) ChatStream(ctx context.Context, req llm.ChatRequest, ch chan<- 
 			}
 		}
 		if strings.TrimSpace(content) == "" {
-			reasoning := chunk.Choices[0].Delta.Reasoning
+			reasoning := firstNonEmpty(
+				decodeChunkText(chunk.Choices[0].Delta.Reasoning),
+				decodeChunkText(chunk.Choices[0].Delta.ReasoningContent),
+				decodeChunkText(chunk.Choices[0].Delta.Thinking),
+			)
 			if reasoning != "" {
 				select {
 				case ch <- llm.StreamToken{Content: reasoning, Thinking: true, Done: false}:
@@ -184,7 +192,7 @@ func (c *Client) ChatStream(ctx context.Context, req llm.ChatRequest, ch chan<- 
 				}
 			}
 		}
-		if chunk.Choices[0].FinishReason != "" {
+		if strings.TrimSpace(decodeChunkText(chunk.Choices[0].FinishReason)) != "" {
 			select {
 			case ch <- llm.StreamToken{Content: "", Done: true}:
 			case <-ctx.Done():
@@ -252,13 +260,17 @@ func (c *Client) Chat(ctx context.Context, req llm.ChatRequest) (string, error) 
 	if len(parsed.Choices) == 0 {
 		return "", fmt.Errorf("lmstudio: empty choices in response")
 	}
-	content := strings.TrimSpace(parsed.Choices[0].Message.Content)
+	content := decodeChunkText(parsed.Choices[0].Message.Content)
 	if content != "" {
 		return content, nil
 	}
 	// ToolRunner uses non-streaming Chat(); some models place output in
-	// message.reasoning when message.content is empty.
-	return strings.TrimSpace(parsed.Choices[0].Message.Reasoning), nil
+	// message.reasoning/reasoning_content when message.content is empty.
+	return firstNonEmpty(
+		decodeChunkText(parsed.Choices[0].Message.Reasoning),
+		decodeChunkText(parsed.Choices[0].Message.ReasoningContent),
+		decodeChunkText(parsed.Choices[0].Message.Thinking),
+	), nil
 }
 
 // ListModels returns the LM Studio model IDs that Shinobi is configured to use.
@@ -357,4 +369,61 @@ func toChatMessages(msgs []llm.Message) []chatMessage {
 		}
 	}
 	return out
+}
+
+func firstNonEmpty(values ...string) string {
+	for _, value := range values {
+		if value != "" {
+			return value
+		}
+	}
+	return ""
+}
+
+func decodeChunkText(raw json.RawMessage) string {
+	rawTrimmed := strings.TrimSpace(string(raw))
+	if rawTrimmed == "" || rawTrimmed == "null" {
+		return ""
+	}
+
+	var asString string
+	if err := json.Unmarshal(raw, &asString); err == nil {
+		return asString
+	}
+
+	var asObject map[string]interface{}
+	if err := json.Unmarshal(raw, &asObject); err == nil {
+		return anyToText(asObject)
+	}
+
+	var asList []interface{}
+	if err := json.Unmarshal(raw, &asList); err == nil {
+		return anyToText(asList)
+	}
+
+	return ""
+}
+
+func anyToText(value interface{}) string {
+	switch v := value.(type) {
+	case string:
+		return v
+	case []interface{}:
+		var parts []string
+		for _, item := range v {
+			if piece := anyToText(item); piece != "" {
+				parts = append(parts, piece)
+			}
+		}
+		return strings.Join(parts, "")
+	case map[string]interface{}:
+		for _, key := range []string{"text", "content", "output_text", "reasoning", "reasoning_content", "thinking"} {
+			if piece := anyToText(v[key]); piece != "" {
+				return piece
+			}
+		}
+		return ""
+	default:
+		return ""
+	}
 }
