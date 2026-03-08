@@ -2762,6 +2762,15 @@ func agentGroupForPath(path string) string {
 		return "shinobi"
 	}
 	clean := filepath.Clean(path)
+	// When HOME is overridden (e.g. isolated profile aliases), absolute agent
+	// paths can still live under the real ~/memory/ai tree. Classify those by
+	// stable path segments instead of only relying on current os.UserHomeDir().
+	if pathHasSubpath(clean, "memory", "ai", "local") {
+		return "local"
+	}
+	if pathHasSubpath(clean, "memory", "ai", "code") {
+		return "code"
+	}
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return ""
@@ -2782,6 +2791,21 @@ func agentGroupForPath(path string) string {
 		return "builtin"
 	}
 	return "other"
+}
+
+func pathHasSubpath(path string, elems ...string) bool {
+	if path == "" {
+		return false
+	}
+	target := filepath.Clean(filepath.Join(elems...))
+	if target == "." || target == "" {
+		return false
+	}
+	sep := string(os.PathSeparator)
+	return path == target ||
+		strings.HasPrefix(path, target+sep) ||
+		strings.HasSuffix(path, sep+target) ||
+		strings.Contains(path, sep+target+sep)
 }
 
 func agentGroupOrder(name string) int {
