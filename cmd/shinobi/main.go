@@ -6,10 +6,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"shinobi/internal/config"
-	"shinobi/internal/search"
-	"shinobi/internal/storage"
-	"shinobi/internal/ui"
+	"github.com/liampierc3/shinobi-cli/internal/config"
+	"github.com/liampierc3/shinobi-cli/internal/search"
+	"github.com/liampierc3/shinobi-cli/internal/storage"
+	"github.com/liampierc3/shinobi-cli/internal/ui"
 
 	tea "github.com/charmbracelet/bubbletea"
 )

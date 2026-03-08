@@ -3,7 +3,7 @@ package ui
 import (
 	"strings"
 
-	"shinobi/internal/config"
+	"github.com/liampierc3/shinobi-cli/internal/config"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"

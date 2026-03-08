@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"shinobi/internal/storage"
+	"github.com/liampierc3/shinobi-cli/internal/storage"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"

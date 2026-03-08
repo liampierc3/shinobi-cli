@@ -11,7 +11,7 @@ import (
 	"os"
 	"strings"
 
-	"shinobi/internal/llm"
+	"github.com/liampierc3/shinobi-cli/internal/llm"
 )
 
 const (

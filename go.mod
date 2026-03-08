@@ -1,4 +1,4 @@
-module shinobi
+module github.com/liampierc3/shinobi-cli
 
 go 1.25.4
 

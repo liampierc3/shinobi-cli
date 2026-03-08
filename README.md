@@ -20,8 +20,6 @@ All screenshots and demo media live in `assets/`.
 
 ![Shinobi chat UI](assets/shinobi-chat.png)
 ![Command menu](assets/shinobi-menu.png)
-<img src="assets/shinobi-agent-picker.png" alt="Agent picker" width="760" />
-<img src="assets/shinobi-help.png" alt="Help panel" width="760" />
 ![Streaming demo](assets/shinobi-streaming.gif)
 
 [Watch full streaming demo (mp4)](assets/shinobi-streaming.mp4)
@@ -31,6 +29,12 @@ All screenshots and demo media live in `assets/`.
 ## Install
 
 **Requirements:** Go 1.21+
+
+```bash
+go install github.com/liampierc3/shinobi-cli/cmd/shinobi@latest
+```
+
+If needed, ensure your Go bin path is on `PATH` (usually `~/go/bin`).
 
 ```bash
 git clone <repo-url> shinobi

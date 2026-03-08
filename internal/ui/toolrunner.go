@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"shinobi/internal/config"
-	"shinobi/internal/llm"
+	"github.com/liampierc3/shinobi-cli/internal/config"
+	"github.com/liampierc3/shinobi-cli/internal/llm"
 )
 
 const (

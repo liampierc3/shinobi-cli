@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"shinobi/internal/commands"
+	"github.com/liampierc3/shinobi-cli/internal/commands"
 
 	"github.com/charmbracelet/lipgloss"
 )

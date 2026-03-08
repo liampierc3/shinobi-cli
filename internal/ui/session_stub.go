@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"shinobi/internal/storage"
+	"github.com/liampierc3/shinobi-cli/internal/storage"
 )
 
 func (m *Model) refreshSessionMenu() {
