@@ -20,8 +20,8 @@ All screenshots and demo media live in `assets/`.
 
 ![Shinobi chat UI](assets/shinobi-chat.png)
 ![Command menu](assets/shinobi-menu.png)
-![Agent picker](assets/shinobi-agent-picker.png)
-![Help panel](assets/shinobi-help.png)
+<img src="assets/shinobi-agent-picker.png" alt="Agent picker" width="760" />
+<img src="assets/shinobi-help.png" alt="Help panel" width="760" />
 ![Streaming demo](assets/shinobi-streaming.gif)
 
 [Watch full streaming demo (mp4)](assets/shinobi-streaming.mp4)
@@ -147,7 +147,6 @@ If multiple keys are set, priority is Brave → Tavily → SerpAPI → DuckDuckG
 | `/skill` | Apply a skill |
 | `/new` | Start a fresh chat |
 | `/history` | Browse past conversations |
-| `/inject <path>` | Inject a file as context |
 | `/principles` | Show design principles |
 | `/help` | Toggle help panel |
 | `/menu` | Open command menu |
