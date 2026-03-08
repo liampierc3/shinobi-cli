@@ -1,0 +1,57 @@
+# Shinobi config — copy to ~/.shinobi/config.yaml and fill in your values.
+
+# ── Backends ──────────────────────────────────────────────────────────────────
+# Configure one or both. If both are set, Shinobi will ask which to use on
+# first run and remember your choice.
+
+lmstudio_url: "http://127.0.0.1:1234/v1"
+ollama_url: ""
+
+# Optional API key (only needed if your backend requires authentication)
+backend_api_key: ""
+
+# ── Model ─────────────────────────────────────────────────────────────────────
+# Leave empty to auto-select the first model returned by the active backend.
+default_model: ""
+
+# ── Agents ────────────────────────────────────────────────────────────────────
+# Agent to load at startup. Must match a filename (without .md) in agent_dirs.
+# Leave empty for no default agent.
+default_agent: ""
+
+# Directories scanned for .md agent files.
+agent_dirs:
+  - ~/.shinobi/agents
+
+# ── Skills ────────────────────────────────────────────────────────────────────
+# Directory containing .md skill files.
+skills_dir: "~/.shinobi/skills"
+
+# Skills injected automatically at the start of every session.
+# Must match skill names (filenames without .md) in skills_dir.
+auto_load_skills: []
+
+# ── Context ───────────────────────────────────────────────────────────────────
+# Paths scanned at startup and injected as a filesystem map for the model.
+# Useful for giving the model awareness of a notes folder, project tree, etc.
+context_paths: []
+
+# ── Web Search ────────────────────────────────────────────────────────────────
+# Configure one provider. Priority: Brave → Tavily → SerpAPI → DuckDuckGo.
+
+# Brave Search — https://brave.com/search/api/
+brave_api_key: ""
+
+# Tavily — https://tavily.com (built for AI agents, generous free tier)
+tavily_api_key: ""
+
+# SerpAPI — https://serpapi.com (Google results, paid)
+serpapi_key: ""
+
+# DuckDuckGo — no key required, limited to instant answers
+duckduckgo_enabled: false
+
+# ── Filesystem Access ─────────────────────────────────────────────────────────
+# Root directories the model is allowed to read from.
+# Defaults to the current working directory if not set.
+filesystem_roots: []

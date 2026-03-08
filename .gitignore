@@ -1,0 +1,54 @@
+# Binary
+/shinobi
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Go build artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+/dist/
+
+# Dependency directories
+vendor/
+
+# Go workspace
+go.work
+go.work.sum
+
+# Test cache
+.testcache/
+
+# Local dev
+.gocache/
+debug.log
+*.log
+
+# Secrets / local config
+.env
+.env.*
+config.yaml
+*_secret*
+*_private*
+
+# Internal docs
+docs/
+
+# Runtime data
+.shinobi/
+*.db
+*.db-shm
+*.db-wal
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
