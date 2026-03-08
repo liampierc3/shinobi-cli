@@ -14,6 +14,18 @@ your inference
 shinobi
 ```
 
+## Screenshots
+
+All screenshots and demo media live in `assets/`.
+
+![Shinobi chat UI](assets/shinobi-chat.png)
+![Command menu](assets/shinobi-menu.png)
+![Agent picker](assets/shinobi-agent-picker.png)
+![Help panel](assets/shinobi-help.png)
+![Streaming demo](assets/shinobi-streaming.gif)
+
+[Watch full streaming demo (mp4)](assets/shinobi-streaming.mp4)
+
 ---
 
 ## Install
